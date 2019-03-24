@@ -59,7 +59,7 @@ Funding Eve
 -----------
 Eve REST framework is a :doc:`collaboratively funded project <funding>`. If you
 run a business and are using Eve in a revenue-generating product, it would make
-business sense to sponsor Eve development: it ensures the project that your
+business sense to sponsor Eve development: it helps ensure the project that your
 product relies on stays healthy and actively maintained. Individual users are
 also welcome to make either a recurring pledge or a one time donation if Eve
 has helped you in your work or personal projects. Every single sign-up makes
