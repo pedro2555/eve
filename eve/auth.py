@@ -9,7 +9,7 @@
     :copyright: (c) 2017 by Nicola Iarocci.
     :license: BSD, see LICENSE for more details.
 """
-from flask import request, Response, current_app as app, g, abort
+from flask import request, current_app as app, g, abort
 from functools import wraps
 
 
