@@ -147,7 +147,9 @@ class BasicAuth(object):
         Override if you want to change the response and/or the realm.
         """
         www_auth = 'Basic realm="%s"' % __package__
-        abort(401, description="Please provide proper credentials", www_authenticate=www_auth)
+        abort(401,
+              description="Please provide proper credentials",
+              www_authenticate=www_auth)
 
     def authorized(self, allowed_roles, resource, method):
         """ Validates the the current request is allowed to pass through.
@@ -263,7 +265,9 @@ class TokenAuth(BasicAuth):
         response.
         """
         www_auth = 'Basic realm="%s"' % __package__
-        abort(401, description="Please provide proper credentials", www_authenticate=www_auth)
+        abort(401,
+              description="Please provide proper credentials",
+              www_authenticate=www_auth)
 
     def authorized(self, allowed_roles, resource, method):
         """ Validates the the current request is allowed to pass through.
