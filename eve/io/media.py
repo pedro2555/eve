@@ -9,9 +9,10 @@
     :copyright: (c) 2017 by Nicola Iarocci.
     :license: BSD, see LICENSE for more details.
 """
+from abc import ABCMeta, abstractmethod
 
 
-class MediaStorage(object):
+class MediaStorage(metaclass=ABCMeta):
     """ The MediaStorage class provides a standardized API for storing files,
     along with a set of default behaviors that all other storage systems can
     inherit or override as necessary.
@@ -27,13 +28,15 @@ class MediaStorage(object):
         """
         self.app = app
 
+    @abstractmethod
     def get(self, id_or_filename, resource=None):
         """ Opens the file given by name or unique id. Note that although the
         returned file is guaranteed to be a File object, it might actually be
         some subclass. Returns None if no file was found.
         """
-        raise NotImplementedError
+        pass
 
+    @abstractmethod
     def put(self, content, filename=None, content_type=None, resource=None):
         """ Saves a new file using the storage system, preferably with the name
         specified. If there already exists a file with this name name, the
@@ -45,18 +48,20 @@ class MediaStorage(object):
         .. versionchanged:: 0.5
            Allow filename to be optional (#414).
         """
-        raise NotImplementedError
+        pass
 
+    @abstractmethod
     def delete(self, id_or_filename, resource=None):
         """ Deletes the file referenced by name or unique id. If deletion is
         not supported on the target storage system this will raise
         NotImplementedError instead
         """
-        raise NotImplementedError
+        pass
 
+    @abstractmethod
     def exists(self, id_or_filename, resource=None):
         """ Returns True if a file referenced by the given name or unique id
         already exists in the storage system, or False if the name is available
         for a new file.
         """
-        raise NotImplementedError
+        pass

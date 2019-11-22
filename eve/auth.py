@@ -9,6 +9,7 @@
     :copyright: (c) 2017 by Nicola Iarocci.
     :license: BSD, see LICENSE for more details.
 """
+from abc import ABCMeta, abstractmethod
 from flask import request, current_app as app, g, abort
 from functools import wraps
 
@@ -84,7 +85,7 @@ def requires_auth(endpoint_class):
     return fdec
 
 
-class BasicAuth(object):
+class BasicAuth(metaclass=ABCMeta):
     """ Implements Basic AUTH logic. Should be subclassed to implement custom
     authentication checking.
 
@@ -130,6 +131,7 @@ class BasicAuth(object):
     def set_user_or_token(self, user):
         g.user = user
 
+    @abstractmethod
     def check_auth(self, username, password, allowed_roles, resource, method):
         """ This function is called to check if a username / password
         combination is valid. Must be overridden with custom logic.
@@ -140,7 +142,7 @@ class BasicAuth(object):
         :param resource: resource being requested.
         :param method: HTTP method being executed (POST, GET, etc.)
         """
-        raise NotImplementedError
+        pass
 
     def authenticate(self):
         """ Returns a standard a 401 response that enables basic auth.
@@ -167,7 +169,7 @@ class BasicAuth(object):
         )
 
 
-class HMACAuth(BasicAuth):
+class HMACAuth(BasicAuth, metaclass=ABCMeta):
     """ Hash Message Authentication Code (HMAC) authentication logic. Must be
     subclassed to implement custom authorization checking.
 
@@ -187,6 +189,7 @@ class HMACAuth(BasicAuth):
     .. versionadded:: 0.0.5
     """
 
+    @abstractmethod
     def check_auth(
         self, userid, hmac_hash, headers, data, allowed_roles, resource, method
     ):
@@ -201,7 +204,7 @@ class HMACAuth(BasicAuth):
         :param resource: resource being requested.
         :param method: HTTP method being executed (POST, GET, etc.)
         """
-        raise NotImplementedError
+        pass
 
     def authorized(self, allowed_roles, resource, method):
         """ Validates the the current request is allowed to pass through.
@@ -227,7 +230,7 @@ class HMACAuth(BasicAuth):
         )
 
 
-class TokenAuth(BasicAuth):
+class TokenAuth(BasicAuth, metaclass=ABCMeta):
     """ Implements Token AUTH logic. Should be subclassed to implement custom
     authentication checking.
 
@@ -244,6 +247,7 @@ class TokenAuth(BasicAuth):
     .. versionadded:: 0.0.5
     """
 
+    @abstractmethod
     def check_auth(self, token, allowed_roles, resource, method):
         """ This function is called to check if a token is valid. Must be
         overridden with custom logic.
@@ -253,7 +257,7 @@ class TokenAuth(BasicAuth):
         :param resource: resource being requested.
         :param method: HTTP method being executed (POST, GET, etc.)
         """
-        raise NotImplementedError
+        pass
 
     def authorized(self, allowed_roles, resource, method):
         """ Validates the the current request is allowed to pass through.

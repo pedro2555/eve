@@ -14,6 +14,7 @@ import re
 import time
 import datetime
 import simplejson as json
+from abc import ABCMeta, abstractmethod
 from werkzeug import utils
 from functools import wraps
 from eve.methods.common import get_rate_limit
@@ -287,7 +288,7 @@ def _best_mime():
     return best_match, renders[best_match]
 
 
-class Renderer(object):
+class Renderer(metaclass=ABCMeta):
     """ Base class for all the renderers. Renderer should set valid `mime`
     attr and have `.render()` method implemented.
 
@@ -295,8 +296,9 @@ class Renderer(object):
 
     mime = tuple()
 
+    @abstractmethod
     def render(self, data):
-        raise NotImplementedError("Renderer .render() method is not " "implemented")
+        pass
 
 
 class JSONRenderer(Renderer):

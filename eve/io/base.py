@@ -11,6 +11,7 @@
 """
 import datetime
 import simplejson as json
+from abc import ABCMeta, abstractmethod
 from copy import copy
 from flask import request, abort
 from eve.utils import date_to_str
@@ -58,7 +59,7 @@ class ConnectionException(Exception):
         return msg
 
 
-class DataLayer(object):
+class DataLayer(metaclass=ABCMeta):
     """ Base data layer class. Defines the interface that actual data-access
     classes, being subclasses, must implement. Implemented as a Flask
     extension.
@@ -111,12 +112,14 @@ class DataLayer(object):
         else:
             self.app = None
 
+    @abstractmethod
     def init_app(self, app):
         """ This is where you want to initialize the db driver so it will be
         alive through the whole instance lifespan.
         """
-        raise NotImplementedError
+        pass
 
+    @abstractmethod
     def find(self, resource, req, sub_resource_lookup, perform_count=True):
         """ Retrieves a set of documents (rows), matching the current request.
         Consumed when a request hits a collection/document endpoint
@@ -140,8 +143,9 @@ class DataLayer(object):
         .. versionchanged:: 0.3
            Support for sub-resources.
         """
-        raise NotImplementedError
+        pass
 
+    @abstractmethod
     def aggregate(self, resource, pipeline, options):
         """ Perform an aggregation on the resource datasource and returns
         the result. Only implent this if the underlying db engine supports
@@ -155,8 +159,9 @@ class DataLayer(object):
 
         .. versionadded:: 0.7
         """
-        raise NotImplementedError
+        pass
 
+    @abstractmethod
     def find_one(
         self,
         resource,
@@ -194,8 +199,9 @@ class DataLayer(object):
         .. versionchanged:: 0.4
            Added the 'req' argument.
         """
-        raise NotImplementedError
+        pass
 
+    @abstractmethod
     def find_one_raw(self, resource, **lookup):
         """ Retrieves a single, raw document. No projections or datasource
         filters are being applied here. Just looking up the document using the
@@ -206,8 +212,9 @@ class DataLayer(object):
 
         .. versionadded:: 0.4
         """
-        raise NotImplementedError
+        pass
 
+    @abstractmethod
     def find_list_of_ids(self, resource, ids, client_projection=None):
         """ Retrieves a list of documents based on a list of primary keys
         The primary key is the field defined in `ID_FIELD`.
@@ -223,8 +230,9 @@ class DataLayer(object):
 
         .. versionadded:: 0.1.0
         """
-        raise NotImplementedError
+        pass
 
+    @abstractmethod
     def insert(self, resource, doc_or_docs):
         """ Inserts a document into a resource collection/table.
 
@@ -238,8 +246,9 @@ class DataLayer(object):
             'document' param renamed to 'doc_or_docs', making support for bulk
             inserts apparent.
         """
-        raise NotImplementedError
+        pass
 
+    @abstractmethod
     def update(self, resource, id_, updates, original):
         """ Updates a collection/table document/row.
         :param resource: resource being accessed. You should then use
@@ -253,8 +262,9 @@ class DataLayer(object):
         :raise OriginalChangedError: raised if the database layer notices a
         change from the supplied `original` parameter.
         """
-        raise NotImplementedError
+        pass
 
+    @abstractmethod
     def replace(self, resource, id_, document, original):
         """ Replaces a collection/table document/row.
         :param resource: resource being accessed. You should then use
@@ -268,8 +278,9 @@ class DataLayer(object):
         change from the supplied `original` parameter.
         .. versionadded:: 0.1.0
         """
-        raise NotImplementedError
+        pass
 
+    @abstractmethod
     def remove(self, resource, lookup):
         """ Removes a document/row or an entire set of documents/rows from a
         database collection/table.
@@ -285,8 +296,9 @@ class DataLayer(object):
         .. versionchanged:: 0.3
            '_id' arg removed; replaced with 'lookup'.
         """
-        raise NotImplementedError
+        pass
 
+    @abstractmethod
     def combine_queries(self, query_a, query_b):
         """ Takes two db queries and applies db-specific syntax to produce
         the intersection.
@@ -294,8 +306,9 @@ class DataLayer(object):
         .. versionadded: 0.1.0
            Support for intelligent combination of db queries
         """
-        raise NotImplementedError
+        pass
 
+    @abstractmethod
     def get_value_from_query(self, query, field_name):
         """ Parses the given potentially-complex query and returns the value
         being assigned to the field given in `field_name`.
@@ -305,8 +318,9 @@ class DataLayer(object):
         .. versionadded: 0.1.0
            Support for parsing values embedded in compound db queries
         """
-        raise NotImplementedError
+        pass
 
+    @abstractmethod
     def query_contains_field(self, query, field_name):
         """ For the specified field name, does the query contain it?
         Used know whether we need to parse a compound query.
@@ -314,8 +328,9 @@ class DataLayer(object):
         .. versionadded: 0.1.0
            Support for parsing values embedded in compound db queries
         """
-        raise NotImplementedError
+        pass
 
+    @abstractmethod
     def is_empty(self, resource):
         """ Returns True if the collection is empty; False otherwise. While
         a user could rely on self.find() method to achieve the same result,
@@ -332,7 +347,7 @@ class DataLayer(object):
 
         .. versionadded: 0.3
         """
-        raise NotImplementedError
+        pass
 
     def datasource(self, resource):
         """ Returns a tuple with the actual name of the database

@@ -257,11 +257,9 @@ class TestBasicAuth(TestBase):
         self.assert401(r.status_code)
 
     def test_bad_auth_class(self):
-        self.app = Eve(settings=self.settings_file, auth=BadBasicAuth)
-        self.test_client = self.app.test_client()
-        r = self.test_client.get("/", headers=self.valid_auth)
         # will fail because check_auth() is not implemented in the custom class
-        self.assert500(r.status_code)
+        with self.assertRaises(TypeError):
+            self.app = Eve(settings=self.settings_file, auth=BadBasicAuth)
 
     def test_instanced_auth(self):
         # tests that the 'auth' argument can also be a class instance. See
@@ -332,11 +330,9 @@ class TestBearerTokenAuth(TestTokenAuth):
         ]
 
     def test_bad_auth_class(self):
-        self.app = Eve(settings=self.settings_file, auth=BadTokenAuth)
-        self.test_client = self.app.test_client()
-        r = self.test_client.get("/", headers=self.valid_auth)
         # will fail because check_auth() is not implemented in the custom class
-        self.assert500(r.status_code)
+        with self.assertRaises(TypeError):
+            self.app = Eve(settings=self.settings_file, auth=BadTokenAuth)
 
 
 class TestCustomTokenAuth(TestTokenAuth):
@@ -349,11 +345,9 @@ class TestCustomTokenAuth(TestTokenAuth):
         ]
 
     def test_bad_auth_class(self):
-        self.app = Eve(settings=self.settings_file, auth=BadTokenAuth)
-        self.test_client = self.app.test_client()
-        r = self.test_client.get("/", headers=self.valid_auth)
         # will fail because check_auth() is not implemented in the custom class
-        self.assert500(r.status_code)
+        with self.assertRaises(TypeError):
+            self.app = Eve(settings=self.settings_file, auth=BadTokenAuth)
 
 
 class TestHMACAuth(TestBasicAuth):
@@ -372,11 +366,10 @@ class TestHMACAuth(TestBasicAuth):
         self.assertTrue(isinstance(self.app.auth, ValidHMACAuth))
 
     def test_bad_auth_class(self):
-        self.app = Eve(settings=self.settings_file, auth=BadHMACAuth)
-        self.test_client = self.app.test_client()
-        r = self.test_client.get("/", headers=self.valid_auth)
         # will fail because check_auth() is not implemented in the custom class
-        self.assert500(r.status_code)
+        with self.assertRaises(TypeError):
+            self.app = Eve(settings=self.settings_file, auth=BadHMACAuth)
+
 
     def test_rfc2617_response(self):
         r = self.test_client.get("/")

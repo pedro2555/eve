@@ -10,16 +10,8 @@ from bson import ObjectId
 
 class TestMediaStorage(TestCase):
     def test_base_media_storage(self):
-        a = MediaStorage()
-        self.assertEqual(a.app, None)
-
-        a = MediaStorage("hello")
-        self.assertEqual(a.app, "hello")
-
-        self.assertRaises(NotImplementedError, a.get, 1)
-        self.assertRaises(NotImplementedError, a.put, "clean", "filename")
-        self.assertRaises(NotImplementedError, a.delete, 1)
-        self.assertRaises(NotImplementedError, a.exists, 1)
+        with self.assertRaises(TypeError):
+            MediaStorage()
 
 
 class TestGridFSMediaStorage(TestBase):

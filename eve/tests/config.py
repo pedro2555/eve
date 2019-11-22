@@ -123,8 +123,8 @@ class TestConfig(TestBase):
 
     def test_custom_datalayer(self):
         class MyTestDataLayer(DataLayer):
-            def init_app(self, app):
-                pass
+            pass
+        DataLayer.register(MyTestDataLayer)
 
         self.app = Eve(data=MyTestDataLayer, settings=self.settings_file)
         self.assertEqual(type(self.app.data), MyTestDataLayer)
